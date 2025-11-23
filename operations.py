@@ -43,8 +43,13 @@ def login(user: str, pw: str) -> None:
     sleep(5)
 
 def set_mixer_temp(new_temp : int) -> None:
-    chrome.find_element(By.ID, "tilesCanvas_mixerTemp1").click()
-    current_temp = int(chrome.find_element(By.ID, "editParamEdValue").text)
+    while(True):
+        try:
+            chrome.find_element(By.ID, "tilesCanvas_mixerTemp1").click()
+            current_temp = int(chrome.find_element(By.ID, "editParamEdValue").text)
+            break
+        except:
+            pass
     
     if current_temp == new_temp:
         chrome.find_element(By.ID, "editParamCancelBtn").click()
@@ -64,6 +69,14 @@ def set_mixer_temp(new_temp : int) -> None:
         button.click()
 
     chrome.find_element(By.ID, "editParamSaveBtn").click()
+
+# direction True -> increase temp
+# direction False -> decrease temp
+def change_mixer_temp(direction : bool) -> None:
+    if direction:
+        set_mixer_temp(int(dp.mixer_temp) + 2) 
+    else:
+        set_mixer_temp(int(dp.mixer_temp) - 1)
 
 def update_device_parameters() -> None:
     all_params = get_device_parameters()
